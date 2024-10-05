@@ -36,6 +36,7 @@ import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.util.AttributeKey
 import io.ktor.util.appendAll
+import io.ktor.utils.io.printStack
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -51,7 +52,7 @@ class KiwanoLog private constructor(private val context: Context) {
     private val kiwanoLogger = KiwanoLogger(context)
 
     private fun initRequestLogging(scope: HttpClient) {
-        scope.sendPipeline.intercept(HttpSendPipeline.Before) {
+        scope.sendPipeline.intercept(HttpSendPipeline.Monitoring) {
 
             val id = kiwanoLogger.logRequest(
                 method = context.method.value,
@@ -64,7 +65,7 @@ class KiwanoLog private constructor(private val context: Context) {
                 context.attributes.put(idAttribute, id)
             }
 
-            val newSubject = try {
+            try {
                 val outgoingContent = context.body as? OutgoingContent
                 val body = when (outgoingContent) {
                     is OutgoingContent.ByteArrayContent ->
@@ -88,14 +89,13 @@ class KiwanoLog private constructor(private val context: Context) {
                             contentType = outgoingContent?.contentType
                         )
                     )
-                } else {
                 }
             } catch (t: Throwable) {
-                subject
+                t.printStack()
             }
 
             try {
-                proceedWith(newSubject)
+                proceedWith(subject)
             } catch (t: Throwable) {
                 if (id != null) {
                     kiwanoLogger.logRequestException(
