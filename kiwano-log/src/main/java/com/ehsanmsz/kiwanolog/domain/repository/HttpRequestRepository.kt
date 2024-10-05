@@ -16,6 +16,10 @@
 
 package com.ehsanmsz.kiwanolog.domain.repository
 
+import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpHeader
+import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
+import kotlinx.coroutines.flow.Flow
+
 /**
  * Created by Ehsan Msz on 04 Sep, 2024
  */
@@ -28,6 +32,7 @@ internal interface HttpRequestRepository {
      */
     suspend fun logRequest(
         method: String,
+        url: String,
         host: String,
         port: Int,
         path: String,
@@ -41,7 +46,7 @@ internal interface HttpRequestRepository {
     fun logRequestBodyAndHeader(
         id: Long,
         requestBody: String?,
-        requestHeaders: Set<Map.Entry<String, List<String>>>
+        requestHeaders: Array<KiwanoHttpHeader>
     )
 
 
@@ -60,7 +65,7 @@ internal interface HttpRequestRepository {
         id: Long,
         statusCode: Int,
         responseBody: String?,
-        responseHeaders: Set<Map.Entry<String, List<String>>>,
+        responseHeaders: Array<KiwanoHttpHeader>,
         protocolVersion: String,
         responseTime: Long,
         duration: Long
@@ -75,4 +80,10 @@ internal interface HttpRequestRepository {
      * Clears all the requests from the database
      */
     fun clearAllRequests()
+
+
+    /**
+     * Returns the last request that hasn't been notified yet
+     */
+    fun lastNotNotifiedRequest(): Flow<KiwanoHttpModel>
 }

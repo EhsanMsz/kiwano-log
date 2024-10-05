@@ -18,6 +18,11 @@ package com.ehsanmsz.kiwanolog.device.logger
 
 import android.content.Context
 import com.ehsanmsz.kiwanolog.data.repository.HttpRequestRepositoryProvider
+import com.ehsanmsz.kiwanolog.data.repository.mapper.toKiwanoHttpHeaderArray
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Created by Ehsan Msz on 02 Sep, 2024
@@ -38,17 +43,24 @@ internal class KiwanoLogger(private val context: Context) {
     /**
      * Observe database and shows notification
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun observeLogsAndSendNotification() {
-        //TODO: observe database and send notifications
+        GlobalScope.launch(Dispatchers.IO) {
+            httpRequestRepository.lastNotNotifiedRequest().collect {
+
+            }
+        }
     }
 
     suspend fun logRequest(
         method: String,
+        url: String,
         host: String,
         port: Int,
         path: String,
         protocol: String
     ): Long? = httpRequestRepository.logRequest(
+        url = url,
         method = method,
         host = host,
         port = port,
@@ -74,7 +86,7 @@ internal class KiwanoLogger(private val context: Context) {
         httpRequestRepository.logRequestBodyAndHeader(
             id = id,
             requestBody = requestBody,
-            requestHeaders = requestHeaders
+            requestHeaders = requestHeaders.toKiwanoHttpHeaderArray()
         )
     }
 
@@ -91,7 +103,7 @@ internal class KiwanoLogger(private val context: Context) {
             id = id,
             statusCode = statusCode,
             responseBody = responseBody,
-            responseHeaders = responseHeaders,
+            responseHeaders = responseHeaders.toKiwanoHttpHeaderArray(),
             protocolVersion = protocolVersion,
             responseTime = responseTime,
             duration = duration

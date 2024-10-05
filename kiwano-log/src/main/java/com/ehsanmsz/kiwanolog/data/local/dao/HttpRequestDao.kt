@@ -21,6 +21,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestEntity
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Ehsan Msz on 02 Sep, 2024
@@ -31,6 +32,13 @@ internal interface HttpRequestDao {
 
     @Insert
     suspend fun insertRequest(requestEntity: HttpRequestEntity): Long
+
+    @Query("SELECT * FROM http_request WHERE notified=0 ORDER BY request_time DESC LIMIT 1")
+    fun lastNotNotifiedRequest(): Flow<HttpRequestEntity?>
+
+
+    @Query("UPDATE http_request SET notified=1 WHERE id=:id")
+    suspend fun setNotified(id: Long)
 
     @Query(
         """

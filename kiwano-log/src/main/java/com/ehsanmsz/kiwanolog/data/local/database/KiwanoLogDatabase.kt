@@ -32,7 +32,7 @@ import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestEntity
 @TypeConverters(HttpRequestStateConverter::class)
 @Database(
     entities = [HttpRequestEntity::class],
-    version = 478,
+    version = 480,
     exportSchema = false
 )
 internal abstract class KiwanoLogDatabase : RoomDatabase() {

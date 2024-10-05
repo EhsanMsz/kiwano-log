@@ -30,7 +30,7 @@ internal class KiwanoHttpModel(
     data class Info(
         val method: String,
         val statusCode: Int? = null,
-        val scheme: String,
+        val url: String,
         val host: String,
         val port: Int,
         val path: String,
@@ -42,13 +42,13 @@ internal class KiwanoHttpModel(
     )
 
     data class Request(
-        val headers: Set<Map.Entry<String, List<String>>>,
+        val headers: Array<KiwanoHttpHeader>,
         val body: String?,
         val timeMillis: Long,
     )
 
     data class Response(
-        val headers: Set<Map.Entry<String, List<String>>>? = null,
+        val headers: Array<KiwanoHttpHeader>? = null,
         val body: String? = null,
         val timeMillis: Long? = null,
     )

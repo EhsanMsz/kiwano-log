@@ -22,8 +22,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.request.HttpSendPipeline
-import io.ktor.client.request.host
-import io.ktor.client.request.port
 import io.ktor.client.statement.HttpReceivePipeline
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -56,8 +54,9 @@ class KiwanoLog private constructor(private val context: Context) {
 
             val id = kiwanoLogger.logRequest(
                 method = context.method.value,
-                host = context.host,
-                port = context.port,
+                url = context.url.toString(),
+                host = context.url.host,
+                port = context.url.port,
                 path = context.url.encodedPath,
                 protocol = context.url.protocol.name.uppercase(),
             )

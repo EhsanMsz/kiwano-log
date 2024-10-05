@@ -19,10 +19,16 @@ package com.ehsanmsz.kiwanolog.data.repository
 import com.ehsanmsz.kiwanolog.data.local.dao.HttpRequestDao
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestEntity
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
+import com.ehsanmsz.kiwanolog.data.repository.mapper.toKiwanoHttpModel
+import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpHeader
+import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
 import com.ehsanmsz.kiwanolog.domain.repository.HttpRequestRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.serialization.encodeToString
@@ -44,6 +50,7 @@ internal class HttpRequestRepositoryImpl(
 
     override suspend fun logRequest(
         method: String,
+        url: String,
         host: String,
         port: Int,
         path: String,
@@ -53,6 +60,7 @@ internal class HttpRequestRepositoryImpl(
             httpRequestDao.insertRequest(
                 HttpRequestEntity(
                     method = method,
+                    url = url,
                     port = port,
                     host = host,
                     path = path,
@@ -69,7 +77,7 @@ internal class HttpRequestRepositoryImpl(
     override fun logRequestBodyAndHeader(
         id: Long,
         requestBody: String?,
-        requestHeaders: Set<Map.Entry<String, List<String>>>
+        requestHeaders: Array<KiwanoHttpHeader>
     ) {
         logSafe(id) {
             httpRequestDao.updateRequestBodyAndHeader(
@@ -93,7 +101,7 @@ internal class HttpRequestRepositoryImpl(
         id: Long,
         statusCode: Int,
         responseBody: String?,
-        responseHeaders: Set<Map.Entry<String, List<String>>>,
+        responseHeaders: Array<KiwanoHttpHeader>,
         protocolVersion: String,
         responseTime: Long,
         duration: Long
@@ -126,6 +134,12 @@ internal class HttpRequestRepositoryImpl(
             runCatching { httpRequestDao.clearRequests() }
         }
     }
+
+    override fun lastNotNotifiedRequest(): Flow<KiwanoHttpModel> =
+        httpRequestDao.lastNotNotifiedRequest()
+            .filterNotNull()
+            .map { it.toKiwanoHttpModel() }
+
 
     private fun logSafe(
         id: Long,

@@ -30,6 +30,7 @@ internal data class HttpRequestEntity(
     val method: String,
     @ColumnInfo(name = "status_code")
     val statusCode: Int? = null,
+    val url: String,
     val host: String,
     val port: Int,
     val path: String,
@@ -50,5 +51,6 @@ internal data class HttpRequestEntity(
     val responseTime: Long? = null,
     val duration: Long? = null,
     val state: HttpRequestState,
-    val exception: String? = null
+    val exception: String? = null,
+    val notified: Boolean = false
 )
