@@ -17,7 +17,7 @@
 package com.ehsanmsz.kiwanolog.device.logger
 
 import android.content.Context
-import com.ehsanmsz.kiwanolog.data.repository.HttpRequestRepositoryProvider
+import com.ehsanmsz.kiwanolog.data.repository.KiwanoRepositoryProvider
 import com.ehsanmsz.kiwanolog.data.repository.mapper.toKiwanoHttpHeaderArray
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  */
 internal class KiwanoLogger(private val context: Context) {
 
-    private val httpRequestRepository = HttpRequestRepositoryProvider.get(context)
+    private val httpRequestRepository = KiwanoRepositoryProvider.get(context)
 
     init {
         httpRequestRepository.completeAllPendingLogs()
@@ -43,6 +43,7 @@ internal class KiwanoLogger(private val context: Context) {
     /**
      * Observe database and shows notification
      */
+    //TODO: implement lifecycle
     @OptIn(DelicateCoroutinesApi::class)
     private fun observeLogsAndSendNotification() {
         GlobalScope.launch(Dispatchers.IO) {

@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Ehsan Msz on 04 Sep, 2024
  */
-internal interface HttpRequestRepository {
+internal interface KiwanoRepository {
 
     /**
      * Logs information of the request.

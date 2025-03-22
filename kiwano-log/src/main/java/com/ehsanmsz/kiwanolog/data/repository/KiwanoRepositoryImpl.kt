@@ -22,7 +22,7 @@ import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
 import com.ehsanmsz.kiwanolog.data.repository.mapper.toKiwanoHttpModel
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpHeader
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
-import com.ehsanmsz.kiwanolog.domain.repository.HttpRequestRepository
+import com.ehsanmsz.kiwanolog.domain.repository.KiwanoRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -38,9 +38,9 @@ import kotlinx.serialization.json.Json
  * Created by Ehsan Msz on 04 Sep, 2024
  */
 @OptIn(DelicateCoroutinesApi::class)
-internal class HttpRequestRepositoryImpl(
+internal class KiwanoRepositoryImpl(
     private val httpRequestDao: HttpRequestDao
-) : HttpRequestRepository {
+) : KiwanoRepository {
 
     private val json = Json {
         isLenient = true

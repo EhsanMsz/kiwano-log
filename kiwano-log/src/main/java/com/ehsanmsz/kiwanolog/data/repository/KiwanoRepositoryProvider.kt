@@ -18,27 +18,27 @@ package com.ehsanmsz.kiwanolog.data.repository
 
 import android.content.Context
 import com.ehsanmsz.kiwanolog.data.local.database.KiwanoLogDatabase
-import com.ehsanmsz.kiwanolog.domain.repository.HttpRequestRepository
+import com.ehsanmsz.kiwanolog.domain.repository.KiwanoRepository
 
 /**
  * Created by Ehsan Msz on 04 Sep, 2024
  */
 
 /**
- * This class provides the [HttpRequestRepository] instance
+ * This class provides the [KiwanoRepository] instance
  */
-internal object HttpRequestRepositoryProvider {
+internal object KiwanoRepositoryProvider {
 
     @Volatile
-    private var httpRequestRepository: HttpRequestRepositoryImpl? = null
+    private var httpRequestRepository: KiwanoRepositoryImpl? = null
 
     /**
-     * Returns the [HttpRequestRepository] instance (singleton)
+     * Returns the [KiwanoRepository] instance (singleton)
      */
-    fun get(context: Context): HttpRequestRepository {
+    fun get(context: Context): KiwanoRepository {
         return synchronized(this) {
             if (httpRequestRepository == null) {
-                httpRequestRepository = HttpRequestRepositoryImpl(
+                httpRequestRepository = KiwanoRepositoryImpl(
                     KiwanoLogDatabase.buildDatabase(context).getHttpRequestDao()
                 )
             }
