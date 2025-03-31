@@ -19,6 +19,7 @@ package com.ehsanmsz.kiwanolog.device.logger
 import android.content.Context
 import com.ehsanmsz.kiwanolog.data.repository.KiwanoRepositoryProvider
 import com.ehsanmsz.kiwanolog.data.repository.mapper.toKiwanoHttpHeaderArray
+import com.ehsanmsz.kiwanolog.device.notification.KiwanoNotificationManagerProvider
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,10 +34,11 @@ import kotlinx.coroutines.launch
  */
 internal class KiwanoLogger(private val context: Context) {
 
-    private val httpRequestRepository = KiwanoRepositoryProvider.get(context)
+    private val kiwanoRepository = KiwanoRepositoryProvider.get(context)
+    private val kiwanoNotificationManager = KiwanoNotificationManagerProvider.get(context)
 
     init {
-        httpRequestRepository.completeAllPendingLogs()
+        kiwanoRepository.completeAllPendingLogs()
         observeLogsAndSendNotification()
     }
 
@@ -47,9 +49,8 @@ internal class KiwanoLogger(private val context: Context) {
     @OptIn(DelicateCoroutinesApi::class)
     private fun observeLogsAndSendNotification() {
         GlobalScope.launch(Dispatchers.IO) {
-            httpRequestRepository.lastNotNotifiedRequest().collect {
-
-            }
+            kiwanoRepository.lastNotNotifiedRequest()
+                .collect(kiwanoNotificationManager::notify)
         }
     }
 
@@ -60,7 +61,7 @@ internal class KiwanoLogger(private val context: Context) {
         port: Int,
         path: String,
         protocol: String
-    ): Long? = httpRequestRepository.logRequest(
+    ): Long? = kiwanoRepository.logRequest(
         url = url,
         method = method,
         host = host,
@@ -73,7 +74,7 @@ internal class KiwanoLogger(private val context: Context) {
         id: Long,
         throwable: Throwable
     ) {
-        httpRequestRepository.logRequestException(
+        kiwanoRepository.logRequestException(
             id = id,
             exception = throwable.stackTraceToString()
         )
@@ -84,7 +85,7 @@ internal class KiwanoLogger(private val context: Context) {
         requestBody: String?,
         requestHeaders: Set<Map.Entry<String, List<String>>>
     ) {
-        httpRequestRepository.logRequestBodyAndHeader(
+        kiwanoRepository.logRequestBodyAndHeader(
             id = id,
             requestBody = requestBody,
             requestHeaders = requestHeaders.toKiwanoHttpHeaderArray()
@@ -100,7 +101,7 @@ internal class KiwanoLogger(private val context: Context) {
         responseTime: Long,
         duration: Long
     ) {
-        httpRequestRepository.logResponse(
+        kiwanoRepository.logResponse(
             id = id,
             statusCode = statusCode,
             responseBody = responseBody,

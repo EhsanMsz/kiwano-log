@@ -16,6 +16,10 @@
 
 package com.ehsanmsz.kiwanolog.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.ehsanmsz.kiwanolog.data.local.dao.HttpRequestDao
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestEntity
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
@@ -27,8 +31,9 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.serialization.encodeToString
@@ -36,6 +41,10 @@ import kotlinx.serialization.json.Json
 
 /**
  * Created by Ehsan Msz on 04 Sep, 2024
+ */
+
+/**
+ * KiwanoRepositoryImpl
  */
 @OptIn(DelicateCoroutinesApi::class)
 internal class KiwanoRepositoryImpl(
@@ -47,6 +56,12 @@ internal class KiwanoRepositoryImpl(
         ignoreUnknownKeys = true
         explicitNulls = false
     }
+
+    override fun logs(): Flow<PagingData<KiwanoHttpModel>> = Pager(
+        config = PagingConfig(pageSize = 20, prefetchDistance = 10, initialLoadSize = 50),
+        pagingSourceFactory = { httpRequestDao.logs() }
+    ).flow.map { it.map { it.toKiwanoHttpModel() } }
+
 
     override suspend fun logRequest(
         method: String,
@@ -137,9 +152,8 @@ internal class KiwanoRepositoryImpl(
 
     override fun lastNotNotifiedRequest(): Flow<KiwanoHttpModel> =
         httpRequestDao.lastNotNotifiedRequest()
-            .filterNotNull()
-            .map { it.toKiwanoHttpModel() }
-
+            .mapNotNull { it?.toKiwanoHttpModel() }
+            .onEach { model -> httpRequestDao.setNotified(model.id) }
 
     private fun logSafe(
         id: Long,

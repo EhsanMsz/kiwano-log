@@ -52,6 +52,7 @@ dependencies {
 
     implementation(libs.roomRuntime)
     implementation(libs.roomKtx)
+    implementation(libs.roomPaging)
     ksp(libs.roomCompiler)
 
     implementation(libs.ktorClientCore)

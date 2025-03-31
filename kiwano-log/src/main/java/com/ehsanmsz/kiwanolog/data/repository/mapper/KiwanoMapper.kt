@@ -33,6 +33,7 @@ private val json = Json {
 }
 
 internal fun HttpRequestEntity.toKiwanoHttpModel() = KiwanoHttpModel(
+    id = id,
     info = KiwanoHttpModel.Info(
         method = method,
         url = url,

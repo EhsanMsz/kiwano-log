@@ -16,6 +16,7 @@
 
 package com.ehsanmsz.kiwanolog.domain.repository
 
+import androidx.paging.PagingData
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpHeader
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,11 @@ import kotlinx.coroutines.flow.Flow
  * Created by Ehsan Msz on 04 Sep, 2024
  */
 internal interface KiwanoRepository {
+
+    /**
+     * Provides paginated logs.
+     */
+    fun logs(): Flow<PagingData<KiwanoHttpModel>>
 
     /**
      * Logs information of the request.
@@ -80,7 +86,6 @@ internal interface KiwanoRepository {
      * Clears all the requests from the database
      */
     fun clearAllRequests()
-
 
     /**
      * Returns the last request that hasn't been notified yet

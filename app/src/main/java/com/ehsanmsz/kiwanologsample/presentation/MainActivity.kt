@@ -16,6 +16,8 @@
 
 package com.ehsanmsz.kiwanologsample.presentation
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,8 +47,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         SampleServer.start()
         enableEdgeToEdge()
-        setContent {
 
+        //request notification permission if needed
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 47)
+
+        setContent {
             val sampleServerRunningState by SampleServer.sampleServerRunningStateFlow.collectAsState()
 
             KiwanoLogTheme {

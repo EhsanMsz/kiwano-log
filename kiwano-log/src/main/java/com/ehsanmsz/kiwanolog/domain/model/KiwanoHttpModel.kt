@@ -22,6 +22,7 @@ import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
  * Created by Ehsan Msz on 04 Sep, 2024
  */
 internal class KiwanoHttpModel(
+    val id: Long,
     val info: Info,
     val request: Request,
     val response: Response? = null,

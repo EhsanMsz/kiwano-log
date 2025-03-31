@@ -16,6 +16,7 @@
 
 package com.ehsanmsz.kiwanolog.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -29,6 +30,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 internal interface HttpRequestDao {
+
+    @Query("SELECT * FROM http_request ORDER BY request_time DESC")
+    fun logs(): PagingSource<Int, HttpRequestEntity>
 
     @Insert
     suspend fun insertRequest(requestEntity: HttpRequestEntity): Long

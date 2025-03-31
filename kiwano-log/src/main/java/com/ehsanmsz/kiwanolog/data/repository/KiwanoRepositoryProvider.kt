@@ -30,19 +30,21 @@ import com.ehsanmsz.kiwanolog.domain.repository.KiwanoRepository
 internal object KiwanoRepositoryProvider {
 
     @Volatile
-    private var httpRequestRepository: KiwanoRepositoryImpl? = null
+    private var kiwanoRepository: KiwanoRepositoryImpl? = null
 
     /**
      * Returns the [KiwanoRepository] instance (singleton)
      */
     fun get(context: Context): KiwanoRepository {
         return synchronized(this) {
-            if (httpRequestRepository == null) {
-                httpRequestRepository = KiwanoRepositoryImpl(
+            if (kiwanoRepository == null) {
+                kiwanoRepository = KiwanoRepositoryImpl(
                     KiwanoLogDatabase.buildDatabase(context).getHttpRequestDao()
                 )
             }
-            httpRequestRepository!!
+            kiwanoRepository!!
         }
     }
+
+    fun getOrNull(): KiwanoRepository? = kiwanoRepository
 }
