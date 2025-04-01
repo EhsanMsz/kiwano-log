@@ -9,6 +9,7 @@ import android.text.SpannedString
 import androidx.core.app.NotificationCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import com.ehsanmsz.kiwanolog.R
 import com.ehsanmsz.kiwanolog.device.notification.receiver.KiwanoNotificationDeleteBroadcastReceiver
 import com.ehsanmsz.kiwanolog.domain.device.KiwanoNotificationManager
 import com.ehsanmsz.kiwanolog.domain.device.KiwanoNotificationManager.Companion.NotificationDeleteAction
@@ -90,7 +91,7 @@ internal class KiwanoNotificationManagerImpl(
     override fun notify(httpModel: KiwanoHttpModel) {
         addHttpModel(httpModel)
         val notification = NotificationCompat.Builder(context, NotificationChannelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.kiwano_log)
             .setDeleteIntent(deleteIntent)
             .setContentIntent(contentIntent)
             .setAutoCancel(true)
