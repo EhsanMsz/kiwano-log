@@ -31,8 +31,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface HttpRequestDao {
 
-    @Query("SELECT * FROM http_request ORDER BY request_time DESC")
-    fun logs(): PagingSource<Int, HttpRequestEntity>
+    @Query("SELECT * FROM http_request WHERE path LIKE '%' || :searchText || '%' ORDER BY request_time DESC")
+    fun logs(searchText: String): PagingSource<Int, HttpRequestEntity>
 
     @Insert
     suspend fun insertRequest(requestEntity: HttpRequestEntity): Long

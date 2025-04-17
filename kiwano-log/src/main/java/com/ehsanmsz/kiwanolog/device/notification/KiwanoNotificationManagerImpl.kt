@@ -91,7 +91,7 @@ internal class KiwanoNotificationManagerImpl(
     override fun notify(httpModel: KiwanoHttpModel) {
         addHttpModel(httpModel)
         val notification = NotificationCompat.Builder(context, NotificationChannelId)
-            .setSmallIcon(R.drawable.kiwano_log)
+            .setSmallIcon(R.drawable.ic_kiwano_log)
             .setDeleteIntent(deleteIntent)
             .setContentIntent(contentIntent)
             .setAutoCancel(true)

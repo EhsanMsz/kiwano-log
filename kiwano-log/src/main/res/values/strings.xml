@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kiwano_delete_all_message">Delete all data?</string>
+    <string name="kiwano_delete">Delete</string>
+    <string name="kiwano_cancel">Cancel</string>
+    <string name="kiwano_no_data">No data here :(</string>
+    <string name="kiwano_search_hint">Search</string>
+</resources>

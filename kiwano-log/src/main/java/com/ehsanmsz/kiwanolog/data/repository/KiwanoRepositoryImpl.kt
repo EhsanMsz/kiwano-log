@@ -57,9 +57,9 @@ internal class KiwanoRepositoryImpl(
         explicitNulls = false
     }
 
-    override fun logs(): Flow<PagingData<KiwanoHttpModel>> = Pager(
+    override fun logs(searchText: String): Flow<PagingData<KiwanoHttpModel>> = Pager(
         config = PagingConfig(pageSize = 20, prefetchDistance = 10, initialLoadSize = 50),
-        pagingSourceFactory = { httpRequestDao.logs() }
+        pagingSourceFactory = { httpRequestDao.logs(searchText) }
     ).flow.map { it.map { it.toKiwanoHttpModel() } }
 
 

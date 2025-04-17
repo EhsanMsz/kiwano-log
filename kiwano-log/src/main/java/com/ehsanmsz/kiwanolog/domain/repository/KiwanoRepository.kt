@@ -27,9 +27,9 @@ import kotlinx.coroutines.flow.Flow
 internal interface KiwanoRepository {
 
     /**
-     * Provides paginated logs.
+     * Provides paginated logs with [searchText] filter.
      */
-    fun logs(): Flow<PagingData<KiwanoHttpModel>>
+    fun logs(searchText: String): Flow<PagingData<KiwanoHttpModel>>
 
     /**
      * Logs information of the request.

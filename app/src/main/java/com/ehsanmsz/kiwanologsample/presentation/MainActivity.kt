@@ -102,7 +102,7 @@ fun Main(
             modifier = Modifier
                 .size(147.dp)
                 .padding(top = 16.dp),
-            imageVector = ImageVector.vectorResource(R.drawable.kiwano_log),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_kiwano_log),
             tint = MaterialTheme.colorScheme.primary,
             contentDescription = "KiwanoLogLogo"
         )
