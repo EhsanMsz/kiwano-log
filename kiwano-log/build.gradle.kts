@@ -30,6 +30,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        compose = true
+    }
     composeCompiler {
         enableStrongSkippingMode = true
     }
@@ -42,6 +45,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -49,6 +53,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.kotlinSerialization)
+    implementation(libs.navigation.compose)
+    implementation(libs.paging.compose)
+    implementation(libs.compose.constraintLayout)
+    debugImplementation(libs.androidx.ui.tooling)
 
     implementation(libs.roomRuntime)
     implementation(libs.roomKtx)
