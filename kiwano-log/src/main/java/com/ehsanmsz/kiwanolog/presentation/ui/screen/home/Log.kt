@@ -46,6 +46,7 @@ import com.ehsanmsz.kiwanolog.R
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
 import com.ehsanmsz.kiwanolog.presentation.ui.theme.AppTheme
+import com.ehsanmsz.kiwanolog.presentation.util.SizeUtil
 import com.ehsanmsz.kiwanolog.presentation.util.TimeUtil
 
 /**
@@ -145,27 +146,29 @@ internal fun Log(httpModel: KiwanoHttpModel) {
             )
         }
 
-//        Row(
-//            modifier = Modifier.constrainAs(sizeRef) {
-//                end.linkTo(timeRef.start, 24.dp)
-//                bottom.linkTo(parent.bottom, 12.dp)
-//            },
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Icon(
-//                modifier = Modifier.size(12.dp).padding(end = 2.dp),
-//                imageVector = ImageVector.vectorResource(R.drawable.ic_kiwano_description),
-//                tint = MaterialTheme.colorScheme.onSurface,
-//                contentDescription = "RequestTime",
-//            )
-//            Text(
-//                textAlign = TextAlign.Start,
-//                overflow = TextOverflow.Ellipsis,
-//                text = SizeUtil.formatSize(),
-//                color = MaterialTheme.colorScheme.onSurface,
-//                style = MaterialTheme.typography.labelSmall
-//            )
-//        }
+        httpModel.response?.size?.let{ responseSize ->
+            Row(
+                modifier = Modifier.constrainAs(sizeRef) {
+                    end.linkTo(timeRef.start, 24.dp)
+                    bottom.linkTo(parent.bottom, 12.dp)
+                },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.size(12.dp).padding(end = 2.dp),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_kiwano_description),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    contentDescription = "RequestTime",
+                )
+                Text(
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                    text = SizeUtil.formatSize(responseSize),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+        }
 
     }
 }

@@ -28,7 +28,7 @@ internal object SizeUtil {
     /**
      * converts [bytes] to human readable format
      */
-    fun formatSize(bytes: Long): String {
+    fun formatSize(bytes: Int): String {
         if (bytes < 1024) return "$bytes B"
 
         val exp = (log2(bytes.toDouble()) / 10).toInt()

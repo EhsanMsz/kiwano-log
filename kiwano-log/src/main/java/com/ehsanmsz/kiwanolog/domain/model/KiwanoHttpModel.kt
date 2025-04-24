@@ -52,5 +52,6 @@ internal class KiwanoHttpModel(
         val headers: Array<KiwanoHttpHeader>? = null,
         val body: String? = null,
         val timeMillis: Long? = null,
+        val size: Int? = null,
     )
 }

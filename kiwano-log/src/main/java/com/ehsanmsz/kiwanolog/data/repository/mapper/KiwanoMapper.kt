@@ -55,6 +55,7 @@ internal fun HttpRequestEntity.toKiwanoHttpModel() = KiwanoHttpModel(
     response = KiwanoHttpModel.Response(
         headers = responseHeaders?.toKiwanoHttpHeaderArray(),
         body = responseBody,
+        size = responseSize,
         timeMillis = responseTime
     )
 )
