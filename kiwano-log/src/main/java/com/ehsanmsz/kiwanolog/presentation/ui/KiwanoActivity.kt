@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.ehsanmsz.kiwanolog.presentation.ui.screen.home.HomeScreen
+import com.ehsanmsz.kiwanolog.presentation.ui.screen.home.detail.HttpRequestDetailScreen
 import com.ehsanmsz.kiwanolog.presentation.ui.theme.AppTheme
 
 /**
@@ -50,12 +51,17 @@ internal class KiwanoActivity : ComponentActivity() {
         NavHost(navController = navController, startDestination = KiwanoScreen.Home) {
 
             composable<KiwanoScreen.Home> {
-                HomeScreen()
+                HomeScreen(
+                    navigateToDetail = { navController.navigate(KiwanoScreen.Detail(it)) }
+                )
             }
 
             composable<KiwanoScreen.Detail> {
                 val detail = it.toRoute<KiwanoScreen.Detail>()
-
+                HttpRequestDetailScreen(
+                    logId = detail.logId,
+                    onBack = { navController.popBackStack() }
+                )
             }
         }
     }

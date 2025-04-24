@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.ehsanmsz.kiwanolog.presentation.ui.screen.home
+package com.ehsanmsz.kiwanolog.presentation.ui.screen.home.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,29 +26,22 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 /**
- * Created by Ehsan Msz on 01 Apr, 2025
- */
-
-/**
- * HomeViewModel
+ * Created by Ehsan Msz on 24 Apr, 2025
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class HomeViewModel : ViewModel() {
-
+internal class HttpRequestDetailViewModel : ViewModel() {
     val repository by lazy { KiwanoRepositoryProvider.getOrNull() }
 
-    val searchText = MutableStateFlow<String>("")
-    val logs = searchText.flatMapLatest { repository?.logs(it) ?: flowOf() }
 
-    fun setSearchTextValue(text: String) {
+    private var modelId = MutableStateFlow<Long?>(null)
+    val model = modelId.flatMapLatest { id ->
+        id?.let { repository?.log(it) } ?: flowOf()
+    }
+
+    fun fetchLog(id: Long) {
         viewModelScope.launch {
-            searchText.emit(text)
+            modelId.emit(id)
         }
     }
 
-    fun removeAll() {
-        viewModelScope.launch {
-            repository?.clearAllRequests()
-        }
-    }
 }

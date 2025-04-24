@@ -66,12 +66,18 @@ class KiwanoLog private constructor(private val context: Context) {
 
             try {
                 val outgoingContent = context.body as? OutgoingContent
+                var requestSize: Int? = null
+
                 val body = when (outgoingContent) {
-                    is OutgoingContent.ByteArrayContent ->
-                        String(
-                            bytes = outgoingContent.bytes(),
-                            charset = outgoingContent.contentType?.charset() ?: Charsets.UTF_8
-                        )
+                    is OutgoingContent.ByteArrayContent -> {
+                        val requestBytes = outgoingContent.bytes()
+                        requestSize = requestBytes.size
+
+                        if (requestSize <= 2 * 1024 * 1024)
+                            String(bytes = requestBytes, charset = Charsets.UTF_8)
+                        else
+                            "Body Omitted"
+                    }
 
                     is OutgoingContent.NoContent -> null
                     else -> "Body Omitted"
@@ -82,6 +88,7 @@ class KiwanoLog private constructor(private val context: Context) {
                     kiwanoLogger.logRequestBodyAndHeader(
                         id = id,
                         requestBody = body,
+                        requestSize = requestSize,
                         requestHeaders = getHeadersWithContentTypeAndLength(
                             existingHeaders = context.headers,
                             contentLength = outgoingContent?.contentLength,

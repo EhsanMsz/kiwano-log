@@ -19,8 +19,11 @@ package com.ehsanmsz.kiwanolog.presentation.ui.screen.home
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -66,10 +69,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ehsanmsz.kiwanolog.R
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
+import com.ehsanmsz.kiwanolog.presentation.ui.screen.home.component.Log
 
 /**
  * Created by Ehsan Msz on 01 Apr, 2025
@@ -81,6 +86,7 @@ import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
  */
 @Composable
 internal fun HomeScreen(
+    navigateToDetail: (Long) -> Unit,
     viewModel: HomeViewModel = viewModel()
 ) {
 
@@ -102,7 +108,8 @@ internal fun HomeScreen(
             paddingValues = paddingValues,
             search = viewModel.searchText.collectAsState().value,
             onSearchChange = viewModel::setSearchTextValue,
-            logs = viewModel.logs?.collectAsLazyPagingItems()
+            onClick = navigateToDetail,
+            logs = viewModel.logs.collectAsLazyPagingItems()
         )
 
         if (showDeleteDialog) {
@@ -169,8 +176,10 @@ private fun HomeContent(
     paddingValues: PaddingValues,
     search: String,
     onSearchChange: (String) -> Unit,
-    logs: LazyPagingItems<KiwanoHttpModel>?
+    onClick: (id: Long) -> Unit,
+    logs: LazyPagingItems<KiwanoHttpModel>
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -179,28 +188,44 @@ private fun HomeContent(
         contentAlignment = Alignment.TopCenter
     ) {
 
-        AnimatedContent(logs == null || logs.itemCount == 0) { hasNoData ->
-            if (hasNoData) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.kiwano_no_data),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(top = 40.dp)
-                        .fillMaxSize()
-                ) {
-                    item { Spacer(modifier = Modifier.padding(18.dp)) }
+        AnimatedContent(
+            targetState = when {
+                logs.loadState.refresh == LoadState.Loading -> LogState.Loading
+                logs.itemCount > 0 -> LogState.Loaded
+                else -> LogState.NoItem
+            },
+            transitionSpec = { fadeIn(tween(500)).togetherWith(fadeOut(tween(500))) }
+        ) { state ->
+            when (state) {
+                LogState.Loading -> {
 
-                    items(logs!!.itemCount) { index ->
-                        logs[index]?.let { model -> Log(model) }
+                }
+
+                LogState.Loaded -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 40.dp)
+                            .fillMaxSize()
+                    ) {
+                        item { Spacer(modifier = Modifier.padding(18.dp)) }
+
+                        items(logs.itemCount) { index ->
+                            logs[index]?.let { model -> Log(httpModel = model, onClick = onClick) }
+                        }
+                        item { Spacer(modifier = Modifier.padding(72.dp)) }
+                    }
+                }
+
+                LogState.NoItem -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.kiwano_no_data),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }

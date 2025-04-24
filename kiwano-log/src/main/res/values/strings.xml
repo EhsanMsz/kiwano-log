@@ -5,4 +5,17 @@
     <string name="kiwano_cancel">Cancel</string>
     <string name="kiwano_no_data">No data here :(</string>
     <string name="kiwano_search_hint">Search</string>
+    <string name="kiwano_info">Info</string>
+    <string name="kiwano_request">Request</string>
+    <string name="kiwano_response">Response</string>
+    <string name="kiwano_method">Method</string>
+    <string name="kiwano_url">Url</string>
+    <string name="kiwano_status">Status</string>
+    <string name="kiwano_protocol">Protocol</string>
+    <string name="kiwano_exception">Exception</string>
+    <string name="kiwano_request_size">Request Size</string>
+    <string name="kiwano_response_size">Response Size</string>
+    <string name="kiwano_request_date_time">Request DateTime</string>
+    <string name="kiwano_response_date_time">Response DateTime</string>
+    <string name="kiwano_response_duration_millis">Duration (milliseconds)</string>
 </resources>

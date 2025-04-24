@@ -27,6 +27,11 @@ import kotlinx.coroutines.flow.Flow
 internal interface KiwanoRepository {
 
     /**
+     * Provides log with [id].
+     */
+    fun log(id: Long): Flow<KiwanoHttpModel?>
+
+    /**
      * Provides paginated logs with [searchText] filter.
      */
     fun logs(searchText: String): Flow<PagingData<KiwanoHttpModel>>
@@ -47,11 +52,12 @@ internal interface KiwanoRepository {
 
 
     /**
-     * Logs the existing [requestBody] and [requestHeaders] with the given [id]
+     * Logs the existing [requestBody], [requestSize] and [requestHeaders] with the given [id]
      */
     fun logRequestBodyAndHeader(
         id: Long,
         requestBody: String?,
+        requestSize: Int?,
         requestHeaders: Array<KiwanoHttpHeader>
     )
 

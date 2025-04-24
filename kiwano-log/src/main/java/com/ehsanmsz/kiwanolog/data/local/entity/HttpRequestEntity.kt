@@ -41,6 +41,8 @@ internal data class HttpRequestEntity(
     val requestHeaders: String? = null,
     @ColumnInfo(name = "request_body")
     val requestBody: String? = null,
+    @ColumnInfo("request_size")
+    val requestSize: Int? = null,
     @ColumnInfo(name = "response_headers")
     val responseHeaders: String? = null,
     @ColumnInfo(name = "response_body")

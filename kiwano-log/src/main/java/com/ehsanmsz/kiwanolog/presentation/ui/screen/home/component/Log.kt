@@ -14,10 +14,11 @@
  *    limitations under the License.
  */
 
-package com.ehsanmsz.kiwanolog.presentation.ui.screen.home
+package com.ehsanmsz.kiwanolog.presentation.ui.screen.home.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,7 +47,7 @@ import com.ehsanmsz.kiwanolog.R
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
 import com.ehsanmsz.kiwanolog.presentation.ui.theme.AppTheme
-import com.ehsanmsz.kiwanolog.presentation.util.SizeUtil
+import com.ehsanmsz.kiwanolog.presentation.util.StorageUtil
 import com.ehsanmsz.kiwanolog.presentation.util.TimeUtil
 
 /**
@@ -54,7 +55,10 @@ import com.ehsanmsz.kiwanolog.presentation.util.TimeUtil
  */
 
 @Composable
-internal fun Log(httpModel: KiwanoHttpModel) {
+internal fun Log(
+    httpModel: KiwanoHttpModel,
+    onClick: (id: Long) -> Unit
+) {
     ConstraintLayout(
         modifier = Modifier
             .padding(vertical = 8.dp)
@@ -62,6 +66,8 @@ internal fun Log(httpModel: KiwanoHttpModel) {
             .requiredHeight(92.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(MaterialTheme.colorScheme.surfaceContainer)
+            .clickable { onClick(httpModel.id) }
+
     ) {
         val (pathRef, statusCodeRef, timeRef, sizeRef) = createRefs()
 
@@ -146,7 +152,7 @@ internal fun Log(httpModel: KiwanoHttpModel) {
             )
         }
 
-        httpModel.response?.size?.let{ responseSize ->
+        httpModel.response?.size?.let { responseSize ->
             Row(
                 modifier = Modifier.constrainAs(sizeRef) {
                     end.linkTo(timeRef.start, 24.dp)
@@ -155,7 +161,9 @@ internal fun Log(httpModel: KiwanoHttpModel) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    modifier = Modifier.size(12.dp).padding(end = 2.dp),
+                    modifier = Modifier
+                        .size(12.dp)
+                        .padding(end = 2.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_kiwano_description),
                     tint = MaterialTheme.colorScheme.onSurface,
                     contentDescription = "RequestTime",
@@ -163,7 +171,7 @@ internal fun Log(httpModel: KiwanoHttpModel) {
                 Text(
                     textAlign = TextAlign.Start,
                     overflow = TextOverflow.Ellipsis,
-                    text = SizeUtil.formatSize(responseSize),
+                    text = StorageUtil.formatSize(responseSize),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.labelSmall
                 )
@@ -203,7 +211,8 @@ private fun Preview() {
                     body = "",
                     timeMillis = 1742660192778
                 )
-            )
+            ),
+            onClick = { }
         )
     }
 }

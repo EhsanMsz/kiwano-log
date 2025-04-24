@@ -50,6 +50,7 @@ internal fun HttpRequestEntity.toKiwanoHttpModel() = KiwanoHttpModel(
     request = KiwanoHttpModel.Request(
         headers = requestHeaders?.toKiwanoHttpHeaderArray() ?: emptyArray(),
         body = requestBody,
+        size = requestSize,
         timeMillis = requestTime
     ),
     response = KiwanoHttpModel.Response(

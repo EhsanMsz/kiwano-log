@@ -31,6 +31,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 internal interface HttpRequestDao {
 
+    @Query("SELECT * FROM http_request WHERE id=:id")
+    fun log(id: Long): Flow<HttpRequestEntity?>
+
     @Query("SELECT * FROM http_request WHERE path LIKE '%' || :searchText || '%' ORDER BY request_time DESC")
     fun logs(searchText: String): PagingSource<Int, HttpRequestEntity>
 
@@ -77,8 +80,19 @@ internal interface HttpRequestDao {
         state: HttpRequestState = HttpRequestState.Failed
     )
 
-    @Query("UPDATE http_request SET request_headers=:requestHeaders, request_body=:requestBody WHERE id=:id")
-    suspend fun updateRequestBodyAndHeader(id: Long, requestHeaders: String?, requestBody: String?)
+    @Query("""UPDATE http_request SET 
+        request_headers=:requestHeaders, 
+        request_body=:requestBody,
+        request_size=:requestSize
+        WHERE id=:id
+        """
+    )
+    suspend fun updateRequestBodyAndHeader(
+        id: Long,
+        requestHeaders: String?,
+        requestBody: String?,
+        requestSize: Int?
+    )
 
     @Query("UPDATE http_request SET state=:state WHERE state IS 'Running'")
     suspend fun setStateForAllRequests(state: HttpRequestState)

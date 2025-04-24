@@ -83,12 +83,14 @@ internal class KiwanoLogger(private val context: Context) {
     fun logRequestBodyAndHeader(
         id: Long,
         requestBody: String?,
+        requestSize: Int?,
         requestHeaders: Set<Map.Entry<String, List<String>>>
     ) {
         kiwanoRepository.logRequestBodyAndHeader(
             id = id,
             requestBody = requestBody,
-            requestHeaders = requestHeaders.toKiwanoHttpHeaderArray()
+            requestHeaders = requestHeaders.toKiwanoHttpHeaderArray(),
+            requestSize = requestSize
         )
     }
 

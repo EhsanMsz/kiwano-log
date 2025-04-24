@@ -14,26 +14,13 @@
  *    limitations under the License.
  */
 
-package com.ehsanmsz.kiwanolog.presentation.util
-
-import kotlin.math.log2
-import kotlin.math.pow
+package com.ehsanmsz.kiwanolog.presentation.ui.screen.home.detail
 
 /**
- * Created by Ehsan Msz on 17 Apr, 2025
+ * Created by Ehsan Msz on 24 Apr, 2025
  */
-internal object SizeUtil {
-    private val units = arrayOf("KB", "MB", "GB")
-
-    /**
-     * converts [bytes] to human readable format
-     */
-    fun formatSize(bytes: Int): String {
-        if (bytes < 1024) return "$bytes B"
-
-        val exp = (log2(bytes.toDouble()) / 10).toInt()
-        val size = bytes / 1024.0.pow(exp)
-
-        return "%.1f %s".format(size, units[exp - 1])
-    }
+sealed class LogDetail {
+    data object Info : LogDetail()
+    data object Request : LogDetail()
+    data object Response : LogDetail()
 }
