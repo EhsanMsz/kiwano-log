@@ -53,6 +53,7 @@ internal interface HttpRequestDao {
                 duration=:duration,
                 response_body=:responseBody,
                 response_headers=:responseHeaders,
+                response_size=:responseSize,
                 state=:state
                 WHERE id=:id
             """
@@ -64,6 +65,7 @@ internal interface HttpRequestDao {
         responseTime: Long,
         duration: Long,
         responseBody: String?,
+        responseSize: Int,
         responseHeaders: String?,
         state: HttpRequestState = HttpRequestState.Completed
     )

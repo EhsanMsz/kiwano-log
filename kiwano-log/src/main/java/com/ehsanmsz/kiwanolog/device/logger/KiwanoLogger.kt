@@ -97,6 +97,7 @@ internal class KiwanoLogger(private val context: Context) {
         statusCode: Int,
         responseBody: String?,
         responseHeaders: Set<Map.Entry<String, List<String>>>,
+        responseSize: Int,
         protocolVersion: String,
         responseTime: Long,
         duration: Long
@@ -106,6 +107,7 @@ internal class KiwanoLogger(private val context: Context) {
             statusCode = statusCode,
             responseBody = responseBody,
             responseHeaders = responseHeaders.toKiwanoHttpHeaderArray(),
+            responseSize = responseSize,
             protocolVersion = protocolVersion,
             responseTime = responseTime,
             duration = duration

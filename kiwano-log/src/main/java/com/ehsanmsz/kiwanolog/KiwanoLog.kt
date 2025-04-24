@@ -23,17 +23,17 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.request.HttpSendPipeline
 import io.ktor.client.statement.HttpReceivePipeline
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.append
 import io.ktor.http.charset
 import io.ktor.http.content.OutgoingContent
-import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.util.AttributeKey
+import io.ktor.util.InternalAPI
 import io.ktor.util.appendAll
+import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.printStack
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -127,13 +127,13 @@ class KiwanoLog private constructor(private val context: Context) {
         return headerBuilder.entries()
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
+    @OptIn(DelicateCoroutinesApi::class, InternalAPI::class)
     private fun initResponseLogging(scope: HttpClient) {
         scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
             GlobalScope.launch(Dispatchers.Unconfined) {
                 supervisorScope {
-                    val bodyText =
-                        response.bodyAsText(response.contentType()?.charset() ?: Charsets.UTF_8)
+                    val responseBytes = response.content.readRemaining().readBytes()
+
                     response.call.attributes[idAttribute].let { id ->
                         kiwanoLogger.logResponse(
                             id = id,
@@ -141,7 +141,8 @@ class KiwanoLog private constructor(private val context: Context) {
                             protocolVersion = response.version.let { "${it.major}.${it.minor}" },
                             responseTime = response.responseTime.timestamp,
                             duration = response.let { response.responseTime.timestamp - response.requestTime.timestamp },
-                            responseBody = bodyText,
+                            responseBody = String(responseBytes, Charsets.UTF_8),
+                            responseSize = responseBytes.size,
                             responseHeaders = response.headers.entries()
                         )
                     }

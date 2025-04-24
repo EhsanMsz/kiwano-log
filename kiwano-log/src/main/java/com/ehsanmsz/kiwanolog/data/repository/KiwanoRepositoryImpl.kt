@@ -117,6 +117,7 @@ internal class KiwanoRepositoryImpl(
         statusCode: Int,
         responseBody: String?,
         responseHeaders: Array<KiwanoHttpHeader>,
+        responseSize: Int,
         protocolVersion: String,
         responseTime: Long,
         duration: Long
@@ -129,6 +130,7 @@ internal class KiwanoRepositoryImpl(
                 responseTime = responseTime,
                 duration = duration,
                 responseBody = responseBody,
+                responseSize = responseSize,
                 responseHeaders = json.encodeToString(responseHeaders)
             )
         }

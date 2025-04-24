@@ -72,6 +72,7 @@ internal interface KiwanoRepository {
         statusCode: Int,
         responseBody: String?,
         responseHeaders: Array<KiwanoHttpHeader>,
+        responseSize: Int,
         protocolVersion: String,
         responseTime: Long,
         duration: Long
