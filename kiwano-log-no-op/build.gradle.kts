@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.ehsanmsz.kiwanolog"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 31
@@ -22,7 +22,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
