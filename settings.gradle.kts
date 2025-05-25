@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 rootProject.name = "KiwanoLogSample"
 include(":app")
 include(":kiwano-log")
+include(":kiwanolog-no-op")

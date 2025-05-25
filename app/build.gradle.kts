@@ -52,7 +52,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":kiwano-log"))
+    debugImplementation(project(":kiwano-log"))
+    releaseImplementation(project(":kiwano-log-no-op"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
