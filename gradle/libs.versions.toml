@@ -17,6 +17,7 @@ material = "1.12.0"
 navigation = "2.8.9"
 paging = "3.3.6"
 constraintLayout = "1.0.1"
+jReleases = "1.19.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,3 +65,4 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlinSerialization = { id = "plugin.serialization", version.ref = "kotlin" }
+jReleaser = {id = "org.jreleaser", version.ref = "jReleases" }

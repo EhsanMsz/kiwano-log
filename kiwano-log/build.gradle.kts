@@ -1,15 +1,14 @@
-import java.io.FileInputStream
-import java.util.Properties
+import org.jreleaser.model.Active
+import java.time.LocalDate
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.jReleaser)
     kotlin(libs.plugins.kotlinSerialization.get().pluginId) version libs.plugins.kotlinSerialization.get().version.toString()
     id("kotlin-parcelize")
-    id("maven-publish")
-    id("signing")
 }
 
 android {
@@ -33,8 +32,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -43,7 +42,7 @@ android {
         enableStrongSkippingMode = true
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
@@ -76,91 +75,39 @@ dependencies {
 /**
  * Publish
  */
-val publishGroupId = "com.ehsanmsz"
-val publishVersion = "0.1.0"
-val publishArtifactId = "kiwano-log-no-op"
-
-val sourceJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("source")
-    from("src/main/java")
-}
-
-artifacts {
-    archives(sourceJar)
-}
-
-group = publishGroupId
-version = publishVersion
-
-var ossrhUsername = ""
-var ossrhPassword = ""
-
-val file = rootProject.file("local.properties")
-var isLocalPropertiesAvailable = file.exists()
-
-if (isLocalPropertiesAvailable) {
-    val properties = Properties().apply { load(FileInputStream(file)) }
-    ossrhUsername = properties["ossrhUsername"] as String
-    ossrhPassword = properties["ossrhPassword"] as String
-} else {
-    ossrhUsername = System.getenv("OSSRH_USERNAME")
-    ossrhPassword = System.getenv("OSSRH_PASSWORD")
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-
-                groupId = publishGroupId
-                version = publishVersion
-                artifactId = publishArtifactId
-
-                pom {
-                    name.set(project.name)
-                    description.set("Ktor client android logger")
-                    url.set("https://github.com/EhsanMsz/kiwano-log")
-
-                    licenses {
-                        license {
-                            name.set("The Apache License, Version 2.0")
-                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        }
-                    }
-                    developers {
-                        developer {
-                            name.set("Ehsan Msz")
-                            email.set("contact@ehsanmsz.com")
-                        }
-                    }
-                    scm {
-                        connection.set("scm:git:github.com/EhsanMsz/kiwano-log.git")
-                        url.set("https://github.com/EhsanMsz/kiwano-log")
-                        developerConnection.set("scm:git:ssh://git@github.com:EhsanMsz/kiwano-log.git")
-                    }
-                }
-                artifact(sourceJar)
-            }
-        }
-
-        repositories {
-            maven {
-                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-            }
+jreleaser {
+    gitRootSearch.set(true)
+    project {
+        name.set("kiwano-log")
+        description.set("Ktor client android logger")
+        version.set("0.1.0")
+        license.set("Apache-2.0")
+        author("Ehsan Msz")
+        inceptionYear.set("2024")
+        copyright.set("Copyright (c) ${LocalDate.now().year} Ehsan Msz")
+        links {
+            homepage.set("https://github.com/EhsanMsz/kiwano-log")
+            documentation.set("https://github.com/EhsanMsz/kiwano-log")
+            contact.set("https://ehsanmsz.com")
         }
     }
-
     signing {
-        if (!isLocalPropertiesAvailable) {
-            val signingKey: String? by project
-            val signingPassword: String? by project
-            useInMemoryPgpKeys(signingKey, signingPassword)
+        active.set(Active.ALWAYS)
+        armored.set(true)
+        verify.set(true)
+    }
+    deploy.maven.mavenCentral {
+        create("sonatype") {
+            active.set(Active.ALWAYS)
+            url.set("https://central.sonatype.com/api/v1/publisher")
+            sign.set(true)
+            sourceJar.set(true)
+            javadocJar.set(true)
+            stagingRepository("target/staging-deploy")
         }
-        sign(publishing.publications)
+    }
+    release.github {
+        skipRelease.set(true)
+        skipTag.set(true)
     }
 }
