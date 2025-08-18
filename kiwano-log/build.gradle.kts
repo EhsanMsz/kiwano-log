@@ -146,7 +146,7 @@ jreleaser {
             url.set("https://central.sonatype.com/api/v1/publisher")
             sign.set(true)
             sourceJar.set(true)
-            stagingRepository("target/staging-deploy")
+            stagingRepository("build/staging-deploy")
         }
     }
     release.github {
