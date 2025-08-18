@@ -146,7 +146,7 @@ jreleaser {
             url.set("https://central.sonatype.com/api/v1/publisher")
             sign.set(true)
             sourceJar.set(true)
-            stagingRepository("build/staging-deploy")
+            stagingRepository("kiwano-log/build/staging-deploy")
         }
     }
     release.github {
