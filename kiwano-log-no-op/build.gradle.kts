@@ -102,6 +102,7 @@ afterEvaluate {
 
 jreleaser {
     gitRootSearch.set(true)
+    project.version.set(publishVersion)
     signing {
         active.set(Active.ALWAYS)
         armored.set(true)
