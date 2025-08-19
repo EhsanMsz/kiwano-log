@@ -8,6 +8,13 @@ jobs:
   publish:
     name: Build and publish
     runs-on: ubuntu-latest
+    env:
+      JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
+      JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+      JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+      JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
+      JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME }}
+      JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN }}
 
     steps:
       - name: Checkout
@@ -18,22 +25,20 @@ jobs:
         with:
           java-version: 17
 
-      - name: Build and publish
-        run: ./gradlew clean :kiwano-log:publish :kiwano-log:jreleaserDeploy --stacktrace
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN }}
+      - name: Clean Kiwano Log
+        run: ./gradlew clean
 
-      - name: Build and publish NoOp
-        run: ./gradlew clean :kiwano-log-no-op:publish :kiwano-log-no-op:jreleaserDeploy --stacktrace
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.JRELEASER_GITHUB_TOKEN }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_USERNAME }}
-          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_SONATYPE_TOKEN }}
+      - name: Publish Kiwano Log
+        run: ./gradlew :kiwano-log:publishReleasePublicationToLocalRepoRepository
+
+      - name: Deploy Kiwano Log
+        run: ./gradlew :kiwano-log:jreleaserDeploy
+
+      - name: Clean Kiwano Log No Op
+        run: ./gradlew clean
+
+      - name: Publish Kiwano Log No Op
+        run: ./gradlew :kiwano-log-no-op:publishReleasePublicationToLocalRepoRepository
+
+      - name: Deploy Kiwano Log No Op
+        run: ./gradlew :kiwano-log-no-op:jreleaserDeploy

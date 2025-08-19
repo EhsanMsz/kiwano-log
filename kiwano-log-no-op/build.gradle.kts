@@ -1,8 +1,4 @@
 import org.jreleaser.model.Active
-import java.io.FileInputStream
-import java.time.LocalDate
-import java.util.Properties
-import kotlin.apply
 
 plugins {
     alias(libs.plugins.android.library)
@@ -46,15 +42,6 @@ dependencies {
  */
 val publishVersion = "0.1.0"
 
-val sourceJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("source")
-    from("src/main/java")
-}
-
-artifacts {
-    archives(sourceJar)
-}
-
 afterEvaluate {
     publishing {
         publications {
@@ -88,12 +75,12 @@ afterEvaluate {
                         developerConnection.set("scm:git:ssh://git@github.com:EhsanMsz/kiwano-log.git")
                     }
                 }
-                artifact(sourceJar)
             }
         }
 
         repositories {
             maven {
+                name = "LocalRepo"
                 url = uri(layout.buildDirectory.dir("staging-deploy"))
             }
         }
@@ -110,10 +97,10 @@ jreleaser {
     }
     deploy.maven.mavenCentral {
         create("sonatype") {
+            applyMavenCentralRules.set(false)
             active.set(Active.ALWAYS)
             url.set("https://central.sonatype.com/api/v1/publisher")
             sign.set(true)
-            sourceJar.set(true)
             stagingRepository("build/staging-deploy")
         }
     }
