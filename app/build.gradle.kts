@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.ehsanmsz.kiwanologsample"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.ehsanmsz.kiwanologsample"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 100
         versionName = "1.0.0"
 
