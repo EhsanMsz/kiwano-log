@@ -20,7 +20,7 @@ package com.ehsanmsz.kiwanolog.presentation.ui.screen.home
  * Created by Ehsan Msz on 24 Apr, 2025
  */
 
-sealed class LogState {
+internal sealed class LogState {
     data object NoItem : LogState()
     data object Loading : LogState()
     data object Loaded : LogState()

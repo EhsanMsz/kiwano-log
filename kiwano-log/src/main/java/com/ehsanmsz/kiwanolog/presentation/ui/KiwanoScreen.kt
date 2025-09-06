@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 /**
  * Created by Ehsan Msz on 01 Apr, 2025
  */
-object KiwanoScreen {
+internal object KiwanoScreen {
 
     @Serializable
     object Home
