@@ -41,6 +41,7 @@ import com.ehsanmsz.kiwanolog.presentation.ui.theme.AppTheme
 import com.ehsanmsz.kiwanolog.presentation.util.StorageUtil
 import com.ehsanmsz.kiwanolog.presentation.util.TimeUtil
 import com.ehsanmsz.kiwanolog.presentation.util.bold
+import com.ehsanmsz.kiwanolog.presentation.util.color
 
 /**
  * Created by Ehsan Msz on 24 Apr, 2025
@@ -103,11 +104,13 @@ internal fun HttpInfo(model: KiwanoHttpModel?) {
                     )
 
 
-                    model.info.exception?.let {
-                        append(
-                            key = context.getString(R.string.kiwano_exception),
-                            value = it
-                        )
+                    model.info.exception?.let { exception ->
+                        color(MaterialTheme.colorScheme.error) {
+                            append(
+                                key = context.getString(R.string.kiwano_exception),
+                                value = exception
+                            )
+                        }
                     }
                 },
                 color = MaterialTheme.colorScheme.onSurface,
