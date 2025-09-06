@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,34 +77,68 @@ internal fun Log(
                 bottom.linkTo(parent.bottom, 8.dp)
                 start.linkTo(parent.start, 12.dp)
             },
-            targetState = httpModel.info.statusCode == null
+            targetState = httpModel.info.state
         ) {
-            if (!it) {
-                Text(
-                    modifier = Modifier
-                        .background(
-                            color = when (httpModel.info.statusCode) {
-                                in 200..299 -> MaterialTheme.colorScheme.primaryContainer
-                                in 400..599 -> MaterialTheme.colorScheme.errorContainer
-                                else -> Color.Transparent
-                            },
-                            shape = RoundedCornerShape(50)
-                        )
-                        .padding(horizontal = 6.dp, vertical = 2.dp),
-                    text = "${httpModel.info.method} ${httpModel.info.statusCode}",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = when (httpModel.info.statusCode) {
-                        in 200..299 -> MaterialTheme.colorScheme.onPrimaryContainer
-                        in 400..599 -> MaterialTheme.colorScheme.onErrorContainer
-                        else -> Color.Transparent
-                    }
-                )
-            } else {
-                CircularProgressIndicator(
-                    modifier = Modifier.requiredSize(18.dp),
-                    strokeWidth = 2.dp
-                )
+            when (it) {
+                HttpRequestState.Completed -> {
+                    Text(
+                        modifier = Modifier
+                            .background(
+                                color = when (httpModel.info.statusCode) {
+                                    in 200..299 -> MaterialTheme.colorScheme.primaryContainer
+                                    in 400..599 -> MaterialTheme.colorScheme.errorContainer
+                                    else -> Color.Transparent
+                                },
+                                shape = RoundedCornerShape(50)
+                            )
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                        text = "${httpModel.info.method} ${httpModel.info.statusCode}",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = when (httpModel.info.statusCode) {
+                            in 200..299 -> MaterialTheme.colorScheme.onPrimaryContainer
+                            in 400..599 -> MaterialTheme.colorScheme.onErrorContainer
+                            else -> Color.Transparent
+                        }
+                    )
+                }
+
+                HttpRequestState.Failed -> {
+                    Text(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.errorContainer,
+                                shape = RoundedCornerShape(50)
+                            )
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                        text = stringResource(R.string.failed),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+
+                HttpRequestState.Running -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.requiredSize(18.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
+
+                HttpRequestState.Unknown -> {
+                    Text(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.errorContainer,
+                                shape = RoundedCornerShape(50)
+                            )
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                        text = stringResource(R.string.unknown),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
             }
         }
 

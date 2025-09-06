@@ -25,6 +25,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
+import io.ktor.client.request.port
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -79,7 +80,16 @@ class SampleClient(context: Context) {
                 get { }
             }
 
-            //does not exists
+            httpClient.runHttpRequest {
+                get {
+                    // Request with exception
+                    port = 8081
+                    url {
+                        path("exception")
+                    }
+                }
+            }
+
             httpClient.runHttpRequest {
                 delete {
                     setBody(DefaultRequest.Json)

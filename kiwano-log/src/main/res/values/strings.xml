@@ -18,4 +18,6 @@
     <string name="kiwano_request_date_time">Request DateTime</string>
     <string name="kiwano_response_date_time">Response DateTime</string>
     <string name="kiwano_response_duration_millis">Duration (milliseconds)</string>
+    <string name="failed">Failed</string>
+    <string name="unknown">Unknown</string>
 </resources>
