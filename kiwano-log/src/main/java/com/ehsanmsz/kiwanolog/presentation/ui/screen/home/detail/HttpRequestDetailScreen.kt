@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ehsanmsz.kiwanolog.R
+import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
 import com.ehsanmsz.kiwanolog.presentation.ui.screen.home.detail.component.HttpInfo
 import com.ehsanmsz.kiwanolog.presentation.ui.screen.home.detail.component.HttpRequest
 import com.ehsanmsz.kiwanolog.presentation.ui.screen.home.detail.component.HttpResponse
@@ -72,6 +73,7 @@ internal fun HttpRequestDetailScreen(
                     NavigationBarItem(
                         selected = selectedNavigationBar == it,
                         onClick = { selectedNavigationBar = it },
+                        enabled = it != LogDetail.Response || httpModel?.info?.state == HttpRequestState.Completed,
                         label = {
                             Text(
                                 text = stringResource(

@@ -48,7 +48,7 @@ internal fun Application.configureRouting() {
         }
 
         post("/delayed/successExampleWithBody") {
-            delay(500)
+            delay(5000)
             call.respond(
                 status = HttpStatusCode.OK,
                 message = SampleServer.DefaultResponse.Success
