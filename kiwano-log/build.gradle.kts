@@ -75,7 +75,7 @@ dependencies {
 /**
  * Publish
  */
-val publishVersion = "0.1.1"
+val publishVersion = "0.1.4"
 
 afterEvaluate {
     publishing {
