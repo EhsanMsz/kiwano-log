@@ -20,26 +20,26 @@ import android.content.Context
 import com.ehsanmsz.kiwanolog.device.logger.KiwanoLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.call.replaceResponse
 import io.ktor.client.plugins.HttpClientPlugin
+import io.ktor.client.plugins.isSaved
 import io.ktor.client.request.HttpSendPipeline
 import io.ktor.client.statement.HttpReceivePipeline
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.append
-import io.ktor.http.charset
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.encodedPath
 import io.ktor.util.AttributeKey
-import io.ktor.util.InternalAPI
 import io.ktor.util.appendAll
-import io.ktor.utils.io.core.readBytes
-import io.ktor.utils.io.printStack
+import io.ktor.util.split
+import io.ktor.utils.io.InternalAPI
+import io.ktor.utils.io.readRemaining
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
+import kotlinx.io.readByteArray
 
 /**
  * Created by Ehsan Msz on 02 Sep, 2024
@@ -97,7 +97,7 @@ class KiwanoLog private constructor(private val context: Context) {
                     )
                 }
             } catch (t: Throwable) {
-                t.printStack()
+                t.printStackTrace()
             }
 
             try {
@@ -137,25 +137,37 @@ class KiwanoLog private constructor(private val context: Context) {
     @OptIn(DelicateCoroutinesApi::class, InternalAPI::class)
     private fun initResponseLogging(scope: HttpClient) {
         scope.receivePipeline.intercept(HttpReceivePipeline.After) { response ->
-            GlobalScope.launch(Dispatchers.Unconfined) {
-                supervisorScope {
-                    val responseBytes = response.content.readRemaining().readBytes()
 
-                    response.call.attributes[idAttribute].let { id ->
-                        kiwanoLogger.logResponse(
-                            id = id,
-                            statusCode = response.status.value,
-                            protocolVersion = response.version.let { "${it.major}.${it.minor}" },
-                            responseTime = response.responseTime.timestamp,
-                            duration = response.let { response.responseTime.timestamp - response.requestTime.timestamp },
-                            responseBody = String(responseBytes, Charsets.UTF_8),
-                            responseSize = responseBytes.size,
-                            responseHeaders = response.headers.entries()
-                        )
-                    }
-                }
+            val contentLength = response.headers[HttpHeaders.ContentLength]?.toIntOrNull() ?: 0
+            val (newResponse, bodyText) = response.getResponseAndBodyAsText(contentLength)
+
+            response.call.attributes[idAttribute].let { id ->
+                kiwanoLogger.logResponse(
+                    id = id,
+                    statusCode = response.status.value,
+                    protocolVersion = response.version.let { "${it.major}.${it.minor}" },
+                    responseTime = response.responseTime.timestamp,
+                    duration = response.responseTime.timestamp - response.requestTime.timestamp,
+                    responseBody = bodyText,
+                    responseSize = contentLength,
+                    responseHeaders = response.headers.entries()
+                )
             }
-            proceedWith(response)
+            proceedWith(newResponse)
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    private suspend fun HttpResponse.getResponseAndBodyAsText(contentLength: Int): Pair<HttpResponse, String> {
+        if (contentLength > 1 * 1024 * 1024)
+            return this to "Body Omitted, Content Length is greater than 1MB"
+
+        if (isSaved)
+            return this to bodyAsText()
+        else {
+            val (channel, copyChannel) = rawContent.split(this)
+            val text = copyChannel.readRemaining().readByteArray()
+            return call.replaceResponse { channel }.response to String(text, Charsets.UTF_8)
         }
     }
 

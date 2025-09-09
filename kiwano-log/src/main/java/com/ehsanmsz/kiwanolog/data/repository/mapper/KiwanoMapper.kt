@@ -19,7 +19,6 @@ package com.ehsanmsz.kiwanolog.data.repository.mapper
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestEntity
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpHeader
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
-import io.ktor.utils.io.printStack
 import kotlinx.serialization.json.Json
 
 /**
@@ -67,6 +66,6 @@ internal fun Set<Map.Entry<String, List<String>>>.toKiwanoHttpHeaderArray(): Arr
 internal fun String.toKiwanoHttpHeaderArray(): Array<KiwanoHttpHeader> = try {
     json.decodeFromString(this)
 } catch (t: Throwable) {
-    t.printStack()
+    t.printStackTrace()
     emptyArray()
 }

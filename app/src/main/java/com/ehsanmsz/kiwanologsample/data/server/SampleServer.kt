@@ -18,6 +18,7 @@ package com.ehsanmsz.kiwanologsample.data.server
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install
+import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
@@ -43,7 +44,7 @@ object SampleServer {
     val sampleServerRunningStateFlow: StateFlow<RunningState> = sampleServerRunningState
 
     private var scope: CoroutineScope? = null
-    private var server: NettyApplicationEngine? = null
+    private var server: EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>? = null
 
     fun toggle() {
         when (sampleServerRunningState.value) {
