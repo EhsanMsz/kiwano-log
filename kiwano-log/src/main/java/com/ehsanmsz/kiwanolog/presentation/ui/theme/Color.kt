@@ -18,6 +18,8 @@ package com.ehsanmsz.kiwanolog.presentation.ui.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 internal val primaryLight = Color(0xFF2C638B)
@@ -167,4 +169,47 @@ internal val darkColorScheme = darkColorScheme(
     surfaceContainer = surfaceContainerDark,
     surfaceContainerHigh = surfaceContainerHighDark,
     surfaceContainerHighest = surfaceContainerHighestDark,
+)
+
+/**
+ * Extra Colors
+ */
+
+@Immutable
+internal data class ExtraColors(
+    val success: Color,
+    val onSuccess: Color,
+    val warning: Color,
+    val onWarning: Color,
+    val error: Color,
+    val onError: Color
+)
+
+internal val LocalExtraColors = staticCompositionLocalOf {
+    ExtraColors(
+        success = Color.Unspecified,
+        onSuccess = Color.Unspecified,
+        warning = Color.Unspecified,
+        onWarning = Color.Unspecified,
+        error = Color.Unspecified,
+        onError = Color.Unspecified
+    )
+}
+
+internal val lightColorSchemeExtra = ExtraColors(
+    success = Color(0xFF2E7D32),
+    onSuccess = Color(0xFFFFFFFF),
+    warning = Color(0xFFEF6C00),
+    onWarning = Color(0xFFFFFFFF),
+    error = Color(0xFFBA1A1A),
+    onError = Color(0xFFFFFFFF)
+)
+
+internal val darkColorSchemeExtra = ExtraColors(
+    success = Color(0xFF81C784),
+    onSuccess = Color(0xFF003917),
+    warning = Color(0xFFFFB74D),
+    onWarning = Color(0xFF3E1C00),
+    error = Color(0xFFFF4231),
+    onError = Color(0xFF500000)
 )

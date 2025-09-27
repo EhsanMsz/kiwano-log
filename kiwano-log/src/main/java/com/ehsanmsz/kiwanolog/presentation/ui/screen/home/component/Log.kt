@@ -48,6 +48,7 @@ import com.ehsanmsz.kiwanolog.R
 import com.ehsanmsz.kiwanolog.data.local.entity.HttpRequestState
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
 import com.ehsanmsz.kiwanolog.presentation.ui.theme.AppTheme
+import com.ehsanmsz.kiwanolog.presentation.ui.theme.LocalExtraColors
 import com.ehsanmsz.kiwanolog.presentation.util.StorageUtil
 import com.ehsanmsz.kiwanolog.presentation.util.TimeUtil
 
@@ -60,6 +61,8 @@ internal fun Log(
     httpModel: KiwanoHttpModel,
     onClick: (id: Long) -> Unit
 ) {
+
+    val extraColors = LocalExtraColors.current
     ConstraintLayout(
         modifier = Modifier
             .padding(vertical = 8.dp)
@@ -85,8 +88,9 @@ internal fun Log(
                         modifier = Modifier
                             .background(
                                 color = when (httpModel.info.statusCode) {
-                                    in 200..299 -> MaterialTheme.colorScheme.primaryContainer
-                                    in 400..599 -> MaterialTheme.colorScheme.errorContainer
+                                    in 200..299 -> extraColors.success
+                                    in 400..499 -> extraColors.warning
+                                    in 500..599 -> extraColors.error
                                     else -> Color.Transparent
                                 },
                                 shape = RoundedCornerShape(50)
@@ -96,8 +100,9 @@ internal fun Log(
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelLarge,
                         color = when (httpModel.info.statusCode) {
-                            in 200..299 -> MaterialTheme.colorScheme.onPrimaryContainer
-                            in 400..599 -> MaterialTheme.colorScheme.onErrorContainer
+                            in 200..299 -> extraColors.onSuccess
+                            in 400..499 -> extraColors.onWarning
+                            in 500..599 -> extraColors.onError
                             else -> Color.Transparent
                         }
                     )
@@ -107,14 +112,14 @@ internal fun Log(
                     Text(
                         modifier = Modifier
                             .background(
-                                color = MaterialTheme.colorScheme.errorContainer,
+                                color = extraColors.error,
                                 shape = RoundedCornerShape(50)
                             )
                             .padding(horizontal = 6.dp, vertical = 2.dp),
                         text = stringResource(R.string.failed),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onErrorContainer
+                        color = extraColors.onError
                     )
                 }
 
