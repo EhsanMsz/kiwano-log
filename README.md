@@ -24,8 +24,8 @@ Add the dependency to your `build.gradle`:
 
 ```gradle
 dependencies {
-    debugImplementation("com.ehsanmsz:kiwano-log:0.1.6")
-    releaseImplementation("com.ehsanmsz:kiwano-log-no-op:0.1.6")
+    debugImplementation("com.ehsanmsz:kiwano-log:0.1.7")
+    releaseImplementation("com.ehsanmsz:kiwano-log-no-op:0.1.7")
 }
 ```
 
