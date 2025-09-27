@@ -21,6 +21,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import com.ehsanmsz.kiwanolog.presentation.ui.theme.ExtraColors.JsonColors
 
 internal val primaryLight = Color(0xFF2C638B)
 internal val onPrimaryLight = Color(0xFFFFFFFF)
@@ -174,7 +175,6 @@ internal val darkColorScheme = darkColorScheme(
 /**
  * Extra Colors
  */
-
 @Immutable
 internal data class ExtraColors(
     val success: Color,
@@ -182,8 +182,19 @@ internal data class ExtraColors(
     val warning: Color,
     val onWarning: Color,
     val error: Color,
-    val onError: Color
-)
+    val onError: Color,
+    val jsonColors: JsonColors
+) {
+    @Immutable
+    data class JsonColors(
+        val key: Color,
+        val string: Color,
+        val number: Color,
+        val boolean: Color,
+        val nullValue: Color,
+        val brace: Color
+    )
+}
 
 internal val LocalExtraColors = staticCompositionLocalOf {
     ExtraColors(
@@ -192,7 +203,15 @@ internal val LocalExtraColors = staticCompositionLocalOf {
         warning = Color.Unspecified,
         onWarning = Color.Unspecified,
         error = Color.Unspecified,
-        onError = Color.Unspecified
+        onError = Color.Unspecified,
+        jsonColors = JsonColors(
+            key = Color.Unspecified,
+            string = Color.Unspecified,
+            number = Color.Unspecified,
+            boolean = Color.Unspecified,
+            nullValue = Color.Unspecified,
+            brace = Color.Unspecified
+        )
     )
 }
 
@@ -202,7 +221,15 @@ internal val lightColorSchemeExtra = ExtraColors(
     warning = Color(0xFFEF6C00),
     onWarning = Color(0xFFFFFFFF),
     error = Color(0xFFBA1A1A),
-    onError = Color(0xFFFFFFFF)
+    onError = Color(0xFFFFFFFF),
+    jsonColors = JsonColors(
+        key = Color(0xFF00356B),
+        string = Color(0xFF9D4D00),
+        number = Color(0xFF006600),
+        boolean = Color(0xFF665500),
+        nullValue = Color(0xFF545454),
+        brace = Color(0xFF000000)
+    )
 )
 
 internal val darkColorSchemeExtra = ExtraColors(
@@ -211,5 +238,13 @@ internal val darkColorSchemeExtra = ExtraColors(
     warning = Color(0xFFFFB74D),
     onWarning = Color(0xFF3E1C00),
     error = Color(0xFFFF4231),
-    onError = Color(0xFF500000)
+    onError = Color(0xFF500000),
+    jsonColors = JsonColors(
+        key = Color(0xFF9CDCFE),
+        string = Color(0xFFE8AA8F),
+        number = Color(0xFFB2D2A2),
+        boolean = Color(0xFFDCDCAA),
+        nullValue = Color(0xFFD0D0D0),
+        brace = Color(0xFFA8A8A8)
+    )
 )

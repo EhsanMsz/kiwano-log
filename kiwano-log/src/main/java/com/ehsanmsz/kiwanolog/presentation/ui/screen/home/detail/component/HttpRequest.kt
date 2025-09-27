@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.ehsanmsz.kiwanolog.domain.model.KiwanoHttpModel
+import com.ehsanmsz.kiwanolog.presentation.ui.theme.LocalExtraColors
 import com.ehsanmsz.kiwanolog.presentation.util.JsonUtil
 import com.ehsanmsz.kiwanolog.presentation.util.bold
 
@@ -85,7 +86,7 @@ internal fun HttpRequest(request: KiwanoHttpModel.Request?) {
                 ) {
                     SelectionContainer {
                         Text(
-                            text = JsonUtil.formatJson(request.body),
+                            text = JsonUtil.formatJson(request.body, LocalExtraColors.current.jsonColors),
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }

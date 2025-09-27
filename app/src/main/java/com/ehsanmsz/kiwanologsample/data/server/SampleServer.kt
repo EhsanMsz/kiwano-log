@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -87,9 +88,12 @@ object SampleServer {
 
     object DefaultResponse {
 
+        @OptIn(ExperimentalSerializationApi::class)
         val Success = buildJsonObject {
             put("status", "success")
             put("message", "This is a success message")
+            put("isSuccess", true)
+            put("extra", null)
             put("timeMillis", System.currentTimeMillis())
             putJsonObject("data") {
                 put("data", "This is a data")
@@ -103,6 +107,7 @@ object SampleServer {
 
         val Failure = buildJsonObject {
             put("status", "failed")
+            put("isSuccess", false)
             put("message", "This is a failure message")
             put("timeMillis", System.currentTimeMillis())
         }
